@@ -2,7 +2,7 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
-
+  outputDir: 'test-results',
   use: {
     baseURL: 'https://develop.dyhlucn3il1ki.amplifyapp.com/',
     browserName: 'chromium',
@@ -27,6 +27,7 @@ module.exports = defineConfig({
   ],
 
   reporter: [
+    ['json'],
     ['html'],
     ['allure-playwright']
   ],

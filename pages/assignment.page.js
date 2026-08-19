@@ -57,6 +57,7 @@ class AssignmentPage {
         await expect(this.titleTxt).toHaveValue(assignmentData.title);
     }
 
+    // createAssignment method to fill the assignment form with data from assignmentData.json
     async createAssignment() {
         await this.titleTxt.fill(assignmentData.title);
         await this.questionTxt.fill(assignmentData.question);

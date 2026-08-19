@@ -6,6 +6,8 @@ const {
 } = require('@cucumber/cucumber');
 
 const { chromium } = require('@playwright/test');
+const allure = require("allure-js-commons");
+require('dotenv').config();
 
 setDefaultTimeout(60 * 1000);
 

@@ -1,6 +1,3 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","0","should show error for invalid credentials","chromium","2026-08-13","skipped","2026-08-13","Login Page","login.spec.js","",""
-"","14","should display Playwright title","chromium","2026-08-13","skipped","2026-08-13","Home Page","home.spec.js","",""
-"","15382","Successful login with valid credentials","","2026-08-13","passed","2026-08-13","","","",""
-"","0","should navigate to docs via Get started","chromium","2026-08-13","skipped","2026-08-13","Home Page","home.spec.js","",""
-"","5820","Successful login with student credentials","","2026-08-13","passed","2026-08-13","","","",""
+"","6455","Successful login with student credentials","","2026-08-17","passed","2026-08-17","","","",""
+"","12582","Successful login with valid credentials","","2026-08-17","passed","2026-08-17","","","",""

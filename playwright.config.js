@@ -1,10 +1,12 @@
 const { defineConfig } = require('@playwright/test');
+//read the environment variable 
+require('dotenv').config();
 
 module.exports = defineConfig({
   testDir: './tests',
   outputDir: 'test-results',
   use: {
-    baseURL: 'https://develop.dyhlucn3il1ki.amplifyapp.com/',
+    baseURL: '/',
     browserName: 'chromium',
     headless: false,
     screenshot: 'only-on-failure',

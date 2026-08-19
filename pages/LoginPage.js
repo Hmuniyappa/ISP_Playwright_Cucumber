@@ -15,10 +15,12 @@ class LoginPage {
   }
   async clickSignInButton() {
     await this.SignInButton.click();
+    await this.page.waitForLoadState('networkidle');
   }
 
   async navigateToDashboard() {
-    await this.page.goto('https://develop.dyhlucn3il1ki.amplifyapp.com/dashboard');
+    console.log("MarkingURL =", process.env.MarkingURL);
+    await this.page.goto(process.env.MarkingURL);
 }
 }
 

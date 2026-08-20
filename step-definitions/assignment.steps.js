@@ -11,9 +11,16 @@ When('User navigates to assignment page', async function () {
 });
 
 When('User creates a new assignment', async function () {
+    console.log("assigment started");
     await assignmentPage.createAssignment();
+    console.log("assigment ended");
+});
+
+When('User clicks Save for Later button', async function () {
+    await assignmentPage.saveForLater();
+    console.log("saved ended");
 });
 
 Then('Assignment should be created successfully', async function () {
-    await assignmentPage.verifyAssignmentPageLoaded();
+    await assignmentPage.verifySavedAssignmentDisplayed();
 });

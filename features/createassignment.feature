@@ -8,4 +8,5 @@ Scenario: Create a new assignment
     And User clicks login button
     And User navigates to assignment page
     And User creates a new assignment
+    And User clicks Save for Later button
     Then Assignment should be created successfully

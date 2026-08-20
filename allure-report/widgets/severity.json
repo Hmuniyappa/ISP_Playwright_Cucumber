@@ -1,1 +1,0 @@
-[{"uid":"cc67aa28abe6791a","name":"Successful login with valid credentials","time":{"start":1786951499553,"stop":1786951512135,"duration":12582},"status":"passed","severity":"normal"},{"uid":"bc037a9da4396c9d","name":"Successful login with student credentials","time":{"start":1786951512142,"stop":1786951518597,"duration":6455},"status":"passed","severity":"normal"}]

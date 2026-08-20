@@ -6,8 +6,11 @@
         "language": "English",
         "curriculum": "UK National Curriculum (KS1/",
         "ageRange": "-8",
-        "className": "Music Year 7 Set 1 (CLASS004)",
+        "className": "Music Year 7 Set 1",
         "student": "Student 1",
-        "markingCriteria": "Favorite hobby"
+        "markingCriteria": "Favorite hobby",
+        "exampleAnswer": "Reading books helps improve vocabulary, knowledge and imagination.",
+        "lifeCompetency": "Cognitive",
+        "dueDate": "19/09/2026"
     }
 }

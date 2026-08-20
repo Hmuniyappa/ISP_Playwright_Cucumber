@@ -9,6 +9,7 @@ module.exports = defineConfig({
     baseURL: '/',
     browserName: 'chromium',
     headless: false,
+    slowMo: 10000,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',

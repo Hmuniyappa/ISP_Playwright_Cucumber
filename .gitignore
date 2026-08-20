@@ -1,6 +1,11 @@
 # Playwright
+/node_modules/
+/playwright.config.js/
 /test-results/
-/playwright-report/
+/playwright-report/.*
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+/allure-results/.*
+/allure-report/.*
+/cucumber-report/.*

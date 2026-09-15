@@ -2,7 +2,7 @@ class LoginPage {
 
   constructor(page) {
     this.page = page;
-    this.classLinkSSOButton = page.getByRole('button', { name: 'Sign in with ClassLink SSO' });
+    this.classLinkSSOButton = page.getByRole('button', { name: 'Sign in with ClassLink' });
     this.UsernameField  = page.getByRole('textbox', { name: 'Username' });
     this.PasswordField = page.getByRole('textbox', { name: 'Password' });
     this.SignInButton = page.getByRole('button', { name: 'Sign In' }); 

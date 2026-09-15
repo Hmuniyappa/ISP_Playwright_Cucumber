@@ -8,11 +8,16 @@ module.exports = defineConfig({
   use: {
     baseURL: '/',
     browserName: 'chromium',
+    viewport: null,
+    launchOptions:{
+      // Start maximized
+      args: ['--start-maximized']
+    },
     headless: false,
     slowMo: 10000,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
   },
 
   projects: [
@@ -22,6 +27,10 @@ module.exports = defineConfig({
     },
     {
       name: 'chromium',
+      launchOptions: {
+        // Start maximized
+        args: ['--start-maximized']
+      },
       use: {
         storageState: './storageState.json', 
       },
@@ -32,6 +41,7 @@ module.exports = defineConfig({
   reporter: [
     ['json'],
     ['html'],
+    ['line'],
     ['allure-playwright']
   ],
 

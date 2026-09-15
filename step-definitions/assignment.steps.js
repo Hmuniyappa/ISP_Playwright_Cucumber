@@ -11,9 +11,11 @@ When('User navigates to assignment page', async function () {
 });
 
 When('User creates a new assignment', async function () {
-    console.log("assigment started");
     await assignmentPage.createAssignment();
-    console.log("assigment ended");
+});
+
+When('User creates a new public assignment', async function () {
+    await assignmentPage.createPublicAssignment();
 });
 
 When('User clicks Save for Later button', async function () {
@@ -21,6 +23,31 @@ When('User clicks Save for Later button', async function () {
     console.log("saved ended");
 });
 
+When('User click on reset button', async function () {
+    await assignmentPage.clickResetButton();
+});
+
 Then('Assignment should be created successfully', async function () {
     await assignmentPage.verifySavedAssignmentDisplayed();
+});
+
+Then('Assignment should be reset successfully', async function () {
+    await assignmentPage.resetAssignmentForm();
+});
+
+Then('User click on cancel button', async function () {
+    await assignmentPage.clickCancelButton();
+});
+
+Then('Assignment should be cancelled successfully', async function () {
+    await assignmentPage.cancelAssignmentForm();
+});
+
+Then('User click on create button', async function () {
+    await assignmentPage.publicAssignment();
+});
+
+Then('Assignment should be created and Public successfully', async function () {
+    await assignmentPage.verifyPublicAssignmentDisplayed();
+    console.log("published ended");
 });

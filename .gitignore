@@ -14,3 +14,8 @@ allure-report/
 
 # Cucumber
 cucumber-report/
+
+#videos
+test-results/videos/
+test-results/screenshots/
+test-results/traces/

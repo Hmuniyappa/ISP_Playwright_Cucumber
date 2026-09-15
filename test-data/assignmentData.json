@@ -5,12 +5,27 @@
         "subject": "Biology Biology",
         "language": "English",
         "curriculum": "UK National Curriculum (KS1/",
-        "ageRange": "-8",
+        "ageRange": "7-8",
         "className": "Music Year 7 Set 1",
         "student": "Student 1",
-        "markingCriteria": "Favorite hobby",
+        "markingCriteria": "5 marks – Explains acids (1), explains bases (1), gives two suitable acid examples (1), gives two suitable base examples (1), describes properties clearly and accurately (1).",
         "exampleAnswer": "Reading books helps improve vocabulary, knowledge and imagination.",
-        "lifeCompetency": "Cognitive",
-        "dueDate": "19/09/2026"
+        "Producemarking": "5 marks",
+        "dueDate": "19/09/2026",
+        "Producegrading":"5: Excellent – Complete and accurate answer\n4: Good – Mostly correct with minor errors\n3: Satisfactory – Shows reasonable understanding but misses some details\n2: Needs improvement – Shows limited understanding\n1: Poor – Very limited relevant information\n0: No relevant answer"
+    }
+,
+    "PublicAssignment": {
+        "title": "Explain the Water Cycle",
+        "question": "Describe the process of evaporation, condensation, and precipitation with an example.",
+        "subject": "Science",
+        "language": "German",
+        "curriculum": "U.S. Common Core Standards Initiative",
+        "ageRange": "9-10",
+        "className": "Music Year 7 Set 1",
+        "student": "Student 1",
+        "markingCriteria": "Understanding of concepts and examples",
+        "exampleAnswer": "The water cycle is the continuous movement of water. Water evaporates from oceans, forms clouds through condensation, and falls as rain through precipitation.",
+        "dueDate": "30/09/2026"
     }
 }

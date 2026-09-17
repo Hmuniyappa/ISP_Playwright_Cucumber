@@ -8,12 +8,15 @@
     "test:bdd": "cucumber-js",
     "test:chrome": "playwright test --project=chromium",
     "test:headed": "playwright test --headed",
-    "allure:generate": "allure generate allure-results --clean -o allure-report",
-    "allure:open": "allure open allure-report",
-    "report": "allure serve allure-results",
-     "cucumberautocomplete.steps": "step-definitions/**/*.js",
-     "cucumberautocomplete.syncfeatures": "true",
-     "cucumberautocomplete.strictGherkinCompletion": "true"
+    "allure": "allure serve allure-results",
+    "allure-report": "allure generate allure-results --clean",
+    "allure:open": "allure open",
+    "test:allure": "npm run test:teacher1 && npm run allure:generate && npm run allure:open",
+    "report": "rimraf allure-results allure-report && cucumber-js && allure generate allure-results --clean -o allure-report",
+    "report:serve": "allure serve allure-results",
+    "cucumberautocomplete.steps": "step-definitions/**/*.js",
+    "cucumberautocomplete.syncfeatures": "true",
+    "cucumberautocomplete.strictGherkinCompletion": "true"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +31,7 @@
     "allure-playwright": "^3.10.2"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "xlsx": "^0.18.5"
   }
 }

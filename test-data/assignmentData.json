@@ -1,7 +1,11 @@
 {
     "CreateAssignment": {
         "title": "Why is reading books important?",
+        "updatetitle": "Updated - Why is reading books important?",
+        "copytitle": "Copied - Why is reading books important?",
         "question": "Reading books improves knowledge, vocabulary, and imagination. It also helps us develop good communication skills.",
+        "updatedescription": "Updated - It is a good habit that improves concentration and supports lifelong learning.",
+        "editdescription": "Edited - This is the edited description.",
         "subject": "Biology Biology",
         "language": "English",
         "curriculum": "UK National Curriculum (KS1/",
@@ -11,7 +15,7 @@
         "markingCriteria": "5 marks – Explains acids (1), explains bases (1), gives two suitable acid examples (1), gives two suitable base examples (1), describes properties clearly and accurately (1).",
         "exampleAnswer": "Reading books helps improve vocabulary, knowledge and imagination.",
         "Producemarking": "5 marks",
-        "dueDate": "19/09/2026",
+        "dueDate": "29/09/2026",
         "Producegrading":"5: Excellent – Complete and accurate answer\n4: Good – Mostly correct with minor errors\n3: Satisfactory – Shows reasonable understanding but misses some details\n2: Needs improvement – Shows limited understanding\n1: Poor – Very limited relevant information\n0: No relevant answer"
     }
 ,

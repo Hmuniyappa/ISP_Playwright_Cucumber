@@ -2,6 +2,7 @@ const { expect } = require('@playwright/test');
 const path = require('path');
 const createAssignmentData = require('../test-data/assignmentData.json').CreateAssignment;
 const publicAssignmentData = require('../test-data/assignmentData.json').PublicAssignment;
+const { setAssignmentTitle } = require('../utils/assignmentRuntime');
 class AssignmentPage {
     constructor(page) {
         this.page = page;
@@ -85,12 +86,14 @@ class AssignmentPage {
         await expect(
             this.page.getByText(this.randomAssignmentId, { exact: true })
         ).toBeVisible();
+        console.log("verifySavedAssignmentDisplayed ended");
     }
 
     // createAssignment method to fill the assignment form with data from assignmentData.json
     async createAssignment() {
         // A unique title lets the saved assignment be identified in the list
-        this.randomAssignmentId = `${createAssignmentData.title} ${Date.now()}`;
+        this.randomAssignmentId = `${createAssignmentData.title} ${Date.now()}`.trim();
+        setAssignmentTitle(this.randomAssignmentId);
         await this.titleTxt.fill(this.randomAssignmentId);
         await this.questionTxt.fill(createAssignmentData.question);
         const imagePath1 = path.resolve(__dirname, '..', 'Imageupload', 'Reading book.png');
@@ -138,7 +141,8 @@ class AssignmentPage {
 
     async createPublicAssignment() {
         // A unique title lets the saved assignment be identified in the list
-        this.randomAssignmentId = `${publicAssignmentData.title} ${Date.now()}`;
+        this.randomAssignmentId = `${publicAssignmentData.title} ${Date.now()}`.trim();
+        setAssignmentTitle(this.randomAssignmentId);
         await this.titleTxt.fill(this.randomAssignmentId);
         await this.questionTxt.fill(publicAssignmentData.question);
         await this.subjectDropdown.click();
@@ -198,6 +202,7 @@ class AssignmentPage {
     async saveForLater() {
         await this.saveForLaterBtn.scrollIntoViewIfNeeded();
         await this.saveForLaterBtn.click();
+        console.log("end saveForLater");
     }
    
     async publicAssignment() {
@@ -209,6 +214,7 @@ class AssignmentPage {
             .first();
         await card.getByRole('button', { name: 'Publish' }).click();
         await this.confirmBtn.click();
+        console.log("end publicAssignmentForm");
     }
 
     async clickResetButton() {

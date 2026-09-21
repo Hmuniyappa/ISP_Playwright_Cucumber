@@ -3,6 +3,7 @@
         "title": "Why is reading books important?",
         "updatetitle": "Updated - Why is reading books important?",
         "copytitle": "Copied - Why is reading books important?",
+        "publishedtitle": "Published - Why is reading books important?",
         "question": "Reading books improves knowledge, vocabulary, and imagination. It also helps us develop good communication skills.",
         "updatedescription": "Updated - It is a good habit that improves concentration and supports lifelong learning.",
         "editdescription": "Edited - This is the edited description.",
@@ -11,7 +12,7 @@
         "curriculum": "UK National Curriculum (KS1/",
         "ageRange": "7-8",
         "className": "Music Year 7 Set 1",
-        "student": "Student 1",
+        "student": ["Student 1", "Student 2"],
         "markingCriteria": "5 marks – Explains acids (1), explains bases (1), gives two suitable acid examples (1), gives two suitable base examples (1), describes properties clearly and accurately (1).",
         "exampleAnswer": "Reading books helps improve vocabulary, knowledge and imagination.",
         "Producemarking": "5 marks",
@@ -27,9 +28,14 @@
         "curriculum": "U.S. Common Core Standards Initiative",
         "ageRange": "9-10",
         "className": "Music Year 7 Set 1",
-        "student": "Student 1",
+        "student": ["Student 1", "Student 2"],
         "markingCriteria": "Understanding of concepts and examples",
         "exampleAnswer": "The water cycle is the continuous movement of water. Water evaporates from oceans, forms clouds through condensation, and falls as rain through precipitation.",
         "dueDate": "30/09/2026"
+    },
+    
+    "SaveDraftAssignment": {
+        "YourAnswer": "The Sun heats water in lakes, rivers, and oceans, causing it to evaporate into water vapor. The water vapor rises and cools, forming clouds through condensation. When the clouds become heavy, water falls back to Earth as rain, snow, or hail. For example, water from a lake evaporates, forms clouds, and later falls as rain back into the lake.",
+        "updatedAnswer": "update - After a rainy day, puddles on the road slowly disappear because the Sun's heat causes the water to evaporate. The water vapor rises, cools, and forms clouds. Later, the clouds release the water as rain, completing the water cycle."
     }
 }

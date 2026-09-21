@@ -109,27 +109,66 @@ class saveAssignmentPage {
         const updateAssignmentTitle = createAssignmentData.updatetitle.trim();
         await this.titleTxt.clear();
         await this.titleTxt.fill(updateAssignmentTitle);
-        await this.updatebtn.click();
+        await this.createdbutton.click();
         this.assignmentTitle = updateAssignmentTitle;
         setAssignmentTitle(this.assignmentTitle);
         await this.getSavedAssignmentCard();
         console.log("updateCreatedAssignment ended");
     }
 
-    async editAssignment() {
+    async continueeditedAssignment() {
+        await this.openManageAssignments();
+        await this.selectAssignmentTitle();
+        const assignmentCard = await this.getSavedAssignmentCard();
+        await assignmentCard.locator(this.editbtn).click();
         await expect(this.questionTxt).toBeVisible({ timeout: 15000 });
+        console.log("continueeditedAssignment ended");
+    }
+
+    async editAssignment() {
         await this.questionTxt.clear();
         await this.questionTxt.fill(createAssignmentData.editdescription);
         await this.updatebtn.click();
         console.log("editAssignment ended");
     }
-
+    async continuecopydAssignment() {
+        await this.openManageAssignments();
+        await this.selectAssignmentTitle();
+        const assignmentCard = await this.getSavedAssignmentCard();
+        await assignmentCard.locator(this.copybtn).click();
+        await expect(this.questionTxt).toBeVisible({ timeout: 15000 });
+        console.log("continuecopydAssignment ended");
+    }
     async copyAssignment() {
         await expect(this.questionTxt).toBeVisible({ timeout: 15000 });
         await this.titleTxt.clear();
         await this.titleTxt.fill(createAssignmentData.copytitle);
-        await this.updatebtn.click();
+        await this.createdbutton.click();
         console.log("copyAssignment ended");
+    }
+
+    async continuepublishAssignment() {
+        await this.openManageAssignments();
+        await this.selectAssignmentTitle();
+        const assignmentCard = await this.getSavedAssignmentCard();
+        await assignmentCard.locator(this.publish).click();
+        const confirmDialog = this.page.getByRole('dialog').filter({ hasText: 'Confirm Publish' });
+        await expect(confirmDialog).toBeVisible({ timeout: 15000 });
+        console.log("continuepublishAssignment ended");
+    }
+
+    async publishAssigment() {
+        const confirmDialog = this.page.getByRole('dialog').filter({ hasText: 'Confirm Publish' });
+        await expect(confirmDialog).toBeVisible({ timeout: 15000 });
+        const publishResponsePromise = this.page.waitForResponse(response =>
+            ['POST', 'PUT', 'PATCH'].includes(response.request().method()),
+            { timeout: 15000 }
+        ).catch(() => null);
+        await confirmDialog.getByRole('button', { name: 'Confirm' }).click();
+        const publishResponse = await publishResponsePromise;
+        expect(publishResponse).not.toBeNull();
+        await expect(confirmDialog).toHaveCount(0, { timeout: 15000 });
+        console.log("publishAssigment ended");
     }
 }
 

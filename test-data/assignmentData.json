@@ -31,7 +31,10 @@
         "student": ["Student 1", "Student 2"],
         "markingCriteria": "Understanding of concepts and examples",
         "exampleAnswer": "The water cycle is the continuous movement of water. Water evaporates from oceans, forms clouds through condensation, and falls as rain through precipitation.",
-        "dueDate": "30/09/2026"
+        "dueDate": "30/09/2026",
+        "feedback": "This is the feedback for the assignment.",
+        "editFeedback": "This is the updated feedback for the assignment.",
+        "AIFeedback": "relevance - This is the AI-generated feedback for the assignment."
     },
     
     "SaveDraftAssignment": {

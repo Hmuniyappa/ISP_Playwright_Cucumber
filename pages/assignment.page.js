@@ -120,12 +120,7 @@ class AssignmentPage {
         await this.page.getByRole('option', {
             name: createAssignmentData.className
         }).click();
-        await this.studentDropdown.click();
-        await this.page.getByRole('option', {
-            name: createAssignmentData.student
-        }).getByRole('checkbox')
-            .check();
-        await this.closeOpenMenu();
+        await this.selectStudents(createAssignmentData.student);
         await this.markingCriteriaTxt.fill(createAssignmentData.markingCriteria);
         await this.exampleAnswerTxt.fill(createAssignmentData.exampleAnswer);
         // enable with LC drop down when the feature is implemented
@@ -166,12 +161,7 @@ class AssignmentPage {
         await this.page.getByRole('option', {
             name: publicAssignmentData.className
         }).click();
-        await this.studentDropdown.click();
-        await this.page.getByRole('option', {
-            name: publicAssignmentData.student
-        }).getByRole('checkbox')
-            .check();
-        await this.closeOpenMenu();
+        await this.selectStudents(publicAssignmentData.student);
         await this.markingCriteriaTxt.fill(publicAssignmentData.markingCriteria);
         await this.exampleAnswerTxt.fill(publicAssignmentData.exampleAnswer);
         //await this.selectLifeCompetencies();
@@ -184,6 +174,19 @@ class AssignmentPage {
         await this.page.keyboard.press('Escape');
         await this.page.locator('.MuiBackdrop-root.MuiBackdrop-invisible')
             .waitFor({ state: 'detached' });
+    }
+
+    async selectStudents(students) {
+        const studentNames = Array.isArray(students) ? students : [students];
+
+        await this.studentDropdown.click();
+        for (const studentName of studentNames) {
+            await this.page.getByRole('option', {
+                name: studentName
+            }).getByRole('checkbox')
+                .check();
+        }
+        await this.closeOpenMenu();
     }
 
     // The due date is a MUI segmented field: DD / MM / YYYY sections, not a single input
@@ -258,9 +261,11 @@ class AssignmentPage {
 
     async verifyPublicAssignmentDisplayed() {
         await this.publishedTab.click();
+        await this.page.reload({ waitUntil: 'networkidle' });
+        await this.publishedTab.click();
         await expect(
             this.page.getByText(this.randomAssignmentId, { exact: false }).first()
-        ).toBeVisible({ timeout: 15000 });
+        ).toBeVisible({ timeout: 30000 });
     }
 
     // async selectLifeCompetencies() {

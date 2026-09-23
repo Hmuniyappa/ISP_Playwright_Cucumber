@@ -5,8 +5,8 @@ const {
   Status
 } = require('@cucumber/cucumber');
 
-const { chromium } = require('@playwright/test');
 const fs = require('fs');
+const { startBrowserSession } = require('./browserSession');
 require('dotenv').config();
 setDefaultTimeout(60 * 1000);
 
@@ -27,55 +27,7 @@ Before(async function () {
   this.pageErrors = [];
   this.networkFailures = [];
 
-  // Launch Browser
-  this.browser = await chromium.launch({
-    headless: false
-  });
-
-  const contextOptions = {};
-
-  // Record Videos
-  contextOptions.recordVideo = {
-    dir: 'test-results/videos/',
-    size: {
-      width: 1280,
-      height: 720
-    }
-  };
-
-  // Create Context
-  this.context = await this.browser.newContext(contextOptions);
-
-  // Start Trace Recording
-  await this.context.tracing.start({
-    screenshots: true,
-    snapshots: true,
-    sources: true
-  });
-
-  // Create New Page
-  this.page = await this.context.newPage();
-
-  // Capture Browser Console Logs
-  this.page.on('console', (msg) => {
-    this.consoleLogs.push(
-      `[${msg.type().toUpperCase()}] ${msg.text()}`
-    );
-  });
-
-  // Capture JavaScript Errors
-  this.page.on('pageerror', (error) => {
-    this.pageErrors.push(
-      error.message
-    );
-  });
-
-  // Capture Network Failures
-  this.page.on('requestfailed', (request) => {
-    this.networkFailures.push(
-      `${request.method()} ${request.url()}`
-    );
-  });
+  await startBrowserSession(this);
 
 });
 

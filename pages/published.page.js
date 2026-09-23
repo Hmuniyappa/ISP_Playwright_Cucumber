@@ -30,7 +30,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         this.starticon = page.getByText('4 Stars, Good', { exact: true });
         this.submitbtn = page.getByRole('button', { name: 'Submit' });
         this.viewHistorybtn = page.getByText('View History', { exact: true });
-        this.closeassigmnetbtn =page.getByText('Close', { exact: true });
+        this.closeassigmnetbtn = page.getByText('Close', { exact: true });
     }
 
 
@@ -403,7 +403,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
 
     async closeAssignment() {
         await this.openManageAssignments();
-       await this.selectAssignmentPublishedTitle();
+        await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
         this.closeassignmentTitle = (await assignmentCard.getByRole('heading').first().textContent()).trim();
         await assignmentCard.locator(this.closeassigmnetbtn).click();
@@ -418,7 +418,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         expect(publishResponse).not.toBeNull();
         await expect(confirmDialog).toHaveCount(0, { timeout: 15000 });
     }
-     async verifycloseAssignment() {
+    async verifycloseAssignment() {
         await this.page.reload({ waitUntil: 'networkidle' });
         await this.savedTab.click();
         await this.search.fill(this.closeassignmentTitle.trim());
@@ -428,5 +428,61 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         console.log("closed Assignment verification ended");
     }
 
+    async publishandReworkButton() {
+        await this.openManageAssignments();
+        await this.selectAssignmentPublishedTitle();
+        const assignmentCard = await this.getSavedAssignmentCard();
+        await assignmentCard.locator(this.submissionsbtn).click();
+        await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
+        await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
+        const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
+        const receivedCount = Number(receivedCountText.split('/')[0].trim());
+        if (receivedCount === 0) {
+            await expect(this.page.getByText('No. of submissions received')).toBeVisible({ timeout: 15000 });
+            await expect(this.page.getByText('No. of remaining submissions')).toBeVisible({ timeout: 15000 });
+            await this.backlink.click();
+            return;
+        }
+        let finalizedCount = 0;
+        const studentNames = Array.isArray(publicAssignmentData.student)
+            ? publicAssignmentData.student
+            : [publicAssignmentData.student];
+        const studentSearch = this.page.getByRole('textbox', { name: /Search student by name/i });
+        if (await studentSearch.isVisible().catch(() => false)) {
+            await studentSearch.clear();
+        }
+
+        for (let pass = 0; pass < 2; pass++) {
+            for (const studentName of studentNames) {
+                finalizedCount += await this.publishandReworkForStudent(studentName);
+            }
+        }
+
+        for (const studentName of studentNames) {
+            await this.selectStudentSubmission(studentName);
+            await this.scrollFeedbackToEnd();
+            const publishReworkButton = this.page.locator('button').filter({ hasText: 'Publish + Rework' }).first();
+            await expect(publishReworkButton).toHaveCount(0, { timeout: 15000 });
+        }
+
+        console.log(`Published and Reworked ${finalizedCount} student submission(s)`);
+        await this.backlink.click();
+    }
+    
+    async publishandReworkForStudent(studentName) {
+        await this.selectStudentSubmission(studentName);
+        await expect(this.page.getByText('Student Feedback', { exact: true }).first()).toBeVisible({ timeout: 15000 });
+        await this.scrollFeedbackToEnd();
+        const publishReworkButton = this.page.locator('button').filter({ hasText: 'Publish + Rework' }).first();
+        if (!await publishReworkButton.isVisible().catch(() => false)) {
+            return 0;
+        }
+        await publishReworkButton.scrollIntoViewIfNeeded();
+        await expect(publishReworkButton).toBeVisible({ timeout: 15000 });
+        await publishReworkButton.click();
+        await this.closeAiFeedbackDialog();
+        await expect(publishReworkButton).toBeHidden({ timeout: 15000 });
+        return 1;
+    }
 }
-module.exports = publishedAssignmentPage;
+module.exports = publishedAssignmentPage;   

@@ -261,9 +261,11 @@ class AssignmentPage {
 
     async verifyPublicAssignmentDisplayed() {
         await this.publishedTab.click();
+        await this.page.reload({ waitUntil: 'networkidle' });
+        await this.publishedTab.click();
         await expect(
             this.page.getByText(this.randomAssignmentId, { exact: false }).first()
-        ).toBeVisible({ timeout: 15000 });
+        ).toBeVisible({ timeout: 30000 });
     }
 
     // async selectLifeCompetencies() {

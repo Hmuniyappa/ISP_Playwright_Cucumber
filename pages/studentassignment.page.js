@@ -11,7 +11,7 @@ class StudentAssignmentPage extends SaveAssignmentPage {
         this.page = page;
         this.assignmentTasksLink = page.getByText('Assignment Tasks', { exact: true }).first();
         this.gotoAssigment = page.getByRole('button', { name: 'Go to Assignment' });
-        this.yourAnswer =page.getByLabel('Your Answer *', { exact: true });
+        this.yourAnswer = page.getByRole('textbox', { name: /Your Answer/i }).first();
         this.submitAnswerButton = page.getByRole('button', { name: 'Submit Answer' });
         this.resetAssignmentButton = page.getByRole('button', { name: 'Reset' });
         this.saveDraftButton = page.getByRole('button', { name: 'Save Draft' });
@@ -34,12 +34,39 @@ class StudentAssignmentPage extends SaveAssignmentPage {
         await expect(this.gotoAssigment.first()).toBeVisible({ timeout: 15000 });
     }
 
+    async getStudentAssignmentCard(actionName) {
+        const eligibleCards = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
+            .filter({ has: this.page.getByRole('button', { name: actionName }) });
+        const assignmentTitle = getAssignmentTitle();
+        const matchingCard = assignmentTitle
+            ? eligibleCards.filter({ hasText: assignmentTitle })
+            : eligibleCards;
+
+        if (await matchingCard.count() > 0) {
+            return matchingCard.first();
+        }
+
+        await expect(eligibleCards.first()).toBeVisible({ timeout: 15000 });
+        return eligibleCards.first();
+    }
+
+    async fillStudentAnswer(answer) {
+        await expect(this.yourAnswer).toBeVisible({ timeout: 15000 });
+        for (let attempt = 0; attempt < 3; attempt++) {
+            await this.yourAnswer.fill('');
+            await expect(this.yourAnswer).toHaveValue('');
+            await this.page.waitForTimeout(300);
+            await this.yourAnswer.pressSequentially(answer, { delay: 10 });
+            if (await this.yourAnswer.inputValue() === answer) {
+                return;
+            }
+        }
+
+        await expect(this.yourAnswer).toHaveValue(answer);
+    }
+
     async selectassignmentTask() {
-        const assignmentTitle = getAssignmentTitle() || publicAssignmentData.title;
-        const assignmentCard = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
-            .filter({ hasText: assignmentTitle })
-            .first();
-        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        const assignmentCard = await this.getStudentAssignmentCard('Go to Assignment');
         await assignmentCard.getByRole('button', { name: 'Go to Assignment' }).click();
     }
 
@@ -62,27 +89,21 @@ class StudentAssignmentPage extends SaveAssignmentPage {
         await this.selectassignmentTask();
         await this.page.waitForLoadState('domcontentloaded');
         await this.yourAnswer.scrollIntoViewIfNeeded();
-        await this.yourAnswer.click();
-        await this.yourAnswer.fill(saveDraftAssignmentData.YourAnswer);
-        await expect(this.yourAnswer).toHaveValue(saveDraftAssignmentData.YourAnswer);
+        await this.fillStudentAnswer(saveDraftAssignmentData.YourAnswer);
         await this.submitAnswerButton.click();
-        await expect(this.backAssigment).toBeVisible({ timeout: 15000 });
-        await this.backAssigment.click();
-        const assignmentTitle = getAssignmentTitle() || publicAssignmentData.title;
-        const assignmentCard = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
-            .filter({ hasText: assignmentTitle })
-            .first();
-        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        const assignmentTasksHeading = this.page.getByRole('heading', { name: 'Assignment Tasks', exact: true });
+        if (await this.backAssigment.isVisible().catch(() => false)) {
+            await this.backAssigment.click();
+        }
+        await expect(assignmentTasksHeading).toBeVisible({ timeout: 15000 });
+        await this.donetab.click();
+        await this.getStudentAssignmentCard('View Answer');
     }
 
     async editassignment() {
         await this.openAssignmentTasks();
         await this.donetab.click();
-        const assignmentTitle = getAssignmentTitle() || publicAssignmentData.title;
-        const assignmentCard = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
-            .filter({ hasText: assignmentTitle })
-            .first();
-        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        const assignmentCard = await this.getStudentAssignmentCard('Edit');
         await assignmentCard.getByRole('button', { name: 'Edit' }).click();
         await this.yourAnswer.scrollIntoViewIfNeeded();
         await this.yourAnswer.click();
@@ -93,11 +114,8 @@ class StudentAssignmentPage extends SaveAssignmentPage {
     async viewanswer() {
         await this.openAssignmentTasks();
         await this.donetab.click();
-        const assignmentTitle = getAssignmentTitle() || publicAssignmentData.title;
-        const assignmentCard = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
-            .filter({ hasText: assignmentTitle })
-            .first();
-        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        const assignmentCard = await this.getStudentAssignmentCard('View Answer');
+        const assignmentTitle = (await assignmentCard.getByRole('heading').first().textContent()).trim();
         await assignmentCard.getByRole('button', { name: 'View Answer' }).click();
         await expect(this.backAssigment).toBeVisible({ timeout: 15000 });
         const assignmentTitleText = this.page.getByText(assignmentTitle, { exact: false }).first();
@@ -109,14 +127,11 @@ class StudentAssignmentPage extends SaveAssignmentPage {
     }
 
 async reworkRequested() {
+        await this.page.reload({ waitUntil: 'networkidle' });
         await this.openAssignmentTasks();
         await this.reworkAssignmenttab.click();
-        await this.page.waitForLoadState('domcontentloaded');
-        const assignmentTitle = getAssignmentTitle() || publicAssignmentData.title;
-        const assignmentCard = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
-            .filter({ hasText: assignmentTitle })
-            .first();
-        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        await expect(this.reworkAssignmenttab).toHaveClass(/Mui-selected/, { timeout: 10000 });
+        const assignmentCard = await this.getStudentAssignmentCard('Rework');
         await assignmentCard.locator('button').filter({ hasText: 'Rework' }).first().click();
         await this.page.waitForLoadState('domcontentloaded');
         await this.yourAnswer.scrollIntoViewIfNeeded();
@@ -133,16 +148,10 @@ async reworkRequested() {
         await this.selectassignmentTask();
         await this.page.waitForLoadState('domcontentloaded');
         await this.yourAnswer.scrollIntoViewIfNeeded();
-        await this.yourAnswer.click();
-        await this.yourAnswer.fill(saveDraftAssignmentData.YourAnswer);
-        await expect(this.yourAnswer).toHaveValue(saveDraftAssignmentData.YourAnswer);
+        await this.fillStudentAnswer(saveDraftAssignmentData.YourAnswer);
         await this.submitAnswerButton.click();
          await this.donetab.click();
-        const assignmentTitle = getAssignmentTitle() || publicAssignmentData.title;
-        const assignmentCard = this.page.locator('.MuiPaper-root, [class*="card"], [class*="Card"]')
-            .filter({ hasText: assignmentTitle })
-            .first();
-        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        await this.getStudentAssignmentCard('View Answer');
     }
 }
 

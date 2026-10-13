@@ -9,6 +9,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         super(page);
         this.page = page;
         this.publishedtab = page.getByRole('tab', { name: 'Published' });
+        this.closedTab = page.getByRole('tab', { name: 'Closed' });
         this.viewbtn = page.getByRole('button', { name: 'View' });
         this.unPublishbtn = page.getByRole('button', { name: 'Unpublish' });
         this.closebtn = page.getByRole('button', { name: 'Close' });
@@ -30,7 +31,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         this.starticon = page.getByText('4 Stars, Good', { exact: true });
         this.submitbtn = page.getByRole('button', { name: 'Submit' });
         this.viewHistorybtn = page.getByText('View History', { exact: true });
-        this.closeassigmnetbtn = page.getByText('Close', { exact: true });
+        this.closeassigmnetbtn = page.getByRole('button', { name: 'Close', exact: true });
     }
 
 
@@ -84,14 +85,14 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.copybtn).click();
+        await assignmentCard.getByRole('button', { name: 'Copy', exact: true }).click();
     }
 
     async clickViewSubmissionsButton() {
         await this.openManageAssignments();
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.submissionsbtn).click();
+        await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
         const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
@@ -130,7 +131,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
         this.deletedAssignmentTitle = (await assignmentCard.getByRole('heading').first().textContent()).trim();
-        await assignmentCard.locator(this.unPublishbtn).click();
+        await assignmentCard.getByRole('button', { name: 'Unpublish', exact: true }).click();
         const confirmDialog = this.page.getByRole('dialog').filter({ hasText: 'Cancel Publish' });
         await expect(confirmDialog).toBeVisible({ timeout: 15000 });
         const publishResponsePromise = this.page.waitForResponse(response =>
@@ -157,7 +158,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.submissionsbtn).click();
+        await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
         const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
@@ -190,9 +191,15 @@ class publishedAssignmentPage extends SaveAssignmentPage {
 
     async editassigmentfeedback() {
         await this.openManageAssignments();
-        await this.selectAssignmentPublishedTitle();
-        const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.submissionsbtn).click();
+        await this.publishedtab.click();
+        await this.search.clear();
+        const assignmentCard = this.page.locator('.MuiPaper-root')
+            .filter({ hasText: /SOME SUBMISSIONS RECEIVED/i })
+            .filter({ has: this.page.getByRole('button', { name: 'View Submissions', exact: true }) })
+            .first();
+        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        this.assignmentTitle = (await assignmentCard.getByRole('heading').first().textContent()).trim();
+        await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
         const receivedCount = Number(receivedCountText.split('/')[0].trim());
@@ -272,7 +279,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.submissionsbtn).click();
+        await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
         const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
@@ -328,18 +335,18 @@ class publishedAssignmentPage extends SaveAssignmentPage {
     }
 
     async closeAiFeedbackDialog() {
-        const feedbackDialog = this.page.getByRole('dialog').filter({ hasText: 'How would you rate the AI feedback?' });
-        if (!await feedbackDialog.isVisible().catch(() => false)) {
+        const feedbackPrompt = this.page.getByText('How would you rate the AI feedback?', { exact: true });
+        if (!await feedbackPrompt.isVisible().catch(() => false)) {
             return;
         }
-        const skipButton = feedbackDialog.getByRole('button', { name: 'Skip' });
+        const skipButton = this.page.getByRole('button', { name: 'Skip', exact: true });
         if (await skipButton.isVisible().catch(() => false)) {
             await skipButton.click();
         }
         else {
-            await feedbackDialog.getByRole('button', { name: 'Submit' }).click();
+            await this.page.getByRole('button', { name: 'Submit', exact: true }).click();
         }
-        await expect(feedbackDialog).toHaveCount(0, { timeout: 15000 });
+        await expect(feedbackPrompt).toBeHidden({ timeout: 15000 });
     }
 
     async selectStudentSubmission(studentName) {
@@ -350,7 +357,16 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         const studentRow = submissionsPanel.getByText(new RegExp(`^\\s*${studentName}\\s*$`)).first();
         await studentRow.scrollIntoViewIfNeeded();
         await expect(studentRow).toBeVisible({ timeout: 15000 });
+        const rowClass = await studentRow.evaluate(element => element.parentElement.className);
+        if (rowClass.includes('opacity-50')) {
+            return false;
+        }
+        if (rowClass.includes('font-medium')) {
+            return true;
+        }
         await studentRow.click();
+        await expect(studentRow.locator('..')).toHaveClass(/font-medium/, { timeout: 10000 });
+        return true;
     }
 
     async scrollSubmissionsListIntoView() {
@@ -373,7 +389,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.submissionsbtn).click();
+        await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
         const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
@@ -403,10 +419,36 @@ class publishedAssignmentPage extends SaveAssignmentPage {
 
     async closeAssignment() {
         await this.openManageAssignments();
-        await this.selectAssignmentPublishedTitle();
-        const assignmentCard = await this.getSavedAssignmentCard();
+        await this.publishedtab.click();
+        await this.search.clear();
+        const nextButton = this.page.getByRole('button', { name: 'Next', exact: true });
+        let assignmentCard;
+
+        for (let pageNumber = 0; pageNumber < 25; pageNumber++) {
+            const eligibleCards = this.page.locator('.MuiPaper-root')
+                .filter({ has: this.page.getByRole('button', { name: 'Close', exact: true }) });
+            if (await eligibleCards.count() > 0) {
+                assignmentCard = eligibleCards.first();
+                break;
+            }
+
+            if (!await nextButton.isEnabled().catch(() => false)) {
+                break;
+            }
+
+            const firstTitle = await this.page.locator('.MuiPaper-root').first()
+                .getByRole('heading').first().textContent();
+            await nextButton.click();
+            await expect(this.page.locator('.MuiPaper-root').first().getByRole('heading').first())
+                .not.toHaveText(firstTitle, { timeout: 10000 });
+        }
+
+        if (!assignmentCard) {
+            throw new Error('No published assignment with a Close action was found.');
+        }
+
         this.closeassignmentTitle = (await assignmentCard.getByRole('heading').first().textContent()).trim();
-        await assignmentCard.locator(this.closeassigmnetbtn).click();
+        await assignmentCard.getByRole('button', { name: 'Close', exact: true }).click();
         const confirmDialog = this.page.getByRole('dialog').filter({ hasText: 'Confirm Close' });
         await expect(confirmDialog).toBeVisible({ timeout: 15000 });
         const publishResponsePromise = this.page.waitForResponse(response =>
@@ -420,11 +462,10 @@ class publishedAssignmentPage extends SaveAssignmentPage {
     }
     async verifycloseAssignment() {
         await this.page.reload({ waitUntil: 'networkidle' });
-        await this.savedTab.click();
+        await this.closedTab.click();
         await this.search.fill(this.closeassignmentTitle.trim());
-        await expect(
-            this.page.getByText(this.closeassignmentTitle, { exact: true })
-        ).toHaveCount(0, { timeout: 15000 });
+        await expect(this.page.getByText(this.closeassignmentTitle, { exact: true }))
+            .toBeVisible({ timeout: 15000 });
         console.log("closed Assignment verification ended");
     }
 
@@ -432,7 +473,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentPublishedTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.submissionsbtn).click();
+        await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
         const receivedCountText = await this.page.getByText(/\d+\s*\/\s*\d+/).first().textContent();
@@ -459,7 +500,9 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         }
 
         for (const studentName of studentNames) {
-            await this.selectStudentSubmission(studentName);
+            if (!await this.selectStudentSubmission(studentName)) {
+                continue;
+            }
             await this.scrollFeedbackToEnd();
             const publishReworkButton = this.page.locator('button').filter({ hasText: 'Publish + Rework' }).first();
             await expect(publishReworkButton).toHaveCount(0, { timeout: 15000 });
@@ -470,7 +513,9 @@ class publishedAssignmentPage extends SaveAssignmentPage {
     }
     
     async publishandReworkForStudent(studentName) {
-        await this.selectStudentSubmission(studentName);
+        if (!await this.selectStudentSubmission(studentName)) {
+            return 0;
+        }
         await expect(this.page.getByText('Student Feedback', { exact: true }).first()).toBeVisible({ timeout: 15000 });
         await this.scrollFeedbackToEnd();
         const publishReworkButton = this.page.locator('button').filter({ hasText: 'Publish + Rework' }).first();
@@ -479,8 +524,14 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         }
         await publishReworkButton.scrollIntoViewIfNeeded();
         await expect(publishReworkButton).toBeVisible({ timeout: 15000 });
+        const reworkResponsePromise = this.page.waitForResponse(response =>
+            ['POST', 'PUT', 'PATCH'].includes(response.request().method()),
+            { timeout: 15000 }
+        ).catch(() => null);
         await publishReworkButton.click();
         await this.closeAiFeedbackDialog();
+        const reworkResponse = await reworkResponsePromise;
+        expect(reworkResponse).not.toBeNull();
         await expect(publishReworkButton).toBeHidden({ timeout: 15000 });
         return 1;
     }

@@ -21,7 +21,7 @@ class AssignmentPage {
         });
 
         this.questionTxt = page.getByRole('textbox', {
-            name: 'Assignment questions*'
+            name: 'Assignment*'
         });
 
         this.uploadImagesInput = page.locator('input[type="file"]').first();
@@ -48,7 +48,7 @@ class AssignmentPage {
         });
 
         this.exampleAnswerTxt = page.getByRole('textbox', {
-            name: 'Example Answer*'
+            name: 'Example Answer'
         });
         // enable with LC drop down when the feature is implemented
         //this.lifeCompetencyDropdown = page.locator('#lifeCompetencies');
@@ -103,23 +103,28 @@ class AssignmentPage {
         await this.page.getByRole('option', {
             name: createAssignmentData.subject
         }).click();
+        await this.closeOpenMenu();
         await this.languageDropdown.click();
         await this.page.getByRole('option', {
             name: createAssignmentData.language
         }).click();
+        await this.closeOpenMenu();
         await this.curriculumDropdown.click();
         await this.page.getByRole('option', {
             name: createAssignmentData.curriculum
         }).click();
+        await this.closeOpenMenu();
         await this.ageRangeDropdown.click();
         await this.page.getByRole('option', {
             name: createAssignmentData.ageRange
         }).click();
+        await this.closeOpenMenu();
         await this.classDropdown.click();
         // MUI renders the option list in a portal outside the combobox
         await this.page.getByRole('option', {
             name: createAssignmentData.className
         }).click();
+        await this.closeOpenMenu();
         await this.selectStudents(createAssignmentData.student);
         await this.markingCriteriaTxt.fill(createAssignmentData.markingCriteria);
         await this.exampleAnswerTxt.fill(createAssignmentData.exampleAnswer);
@@ -141,26 +146,31 @@ class AssignmentPage {
         await this.titleTxt.fill(this.randomAssignmentId);
         await this.questionTxt.fill(publicAssignmentData.question);
         await this.subjectDropdown.click();
-        await this.page.getByRole('option', {
-            name: publicAssignmentData.subject
+        await this.page.getByRole('option').filter({
+            has: this.page.getByText(publicAssignmentData.subject, { exact: true })
         }).click();
+        await this.closeOpenMenu();
         await this.languageDropdown.click();
         await this.page.getByRole('option', {
             name: publicAssignmentData.language
         }).click();
+        await this.closeOpenMenu();
         await this.curriculumDropdown.click();
         await this.page.getByRole('option', {
             name: publicAssignmentData.curriculum
         }).click();
+        await this.closeOpenMenu();
         await this.ageRangeDropdown.click();
         await this.page.getByRole('option', {
             name: publicAssignmentData.ageRange
         }).click();
+        await this.closeOpenMenu();
         await this.classDropdown.click();
         // MUI renders the option list in a portal outside the combobox
         await this.page.getByRole('option', {
             name: publicAssignmentData.className
         }).click();
+        await this.closeOpenMenu();
         await this.selectStudents(publicAssignmentData.student);
         await this.markingCriteriaTxt.fill(publicAssignmentData.markingCriteria);
         await this.exampleAnswerTxt.fill(publicAssignmentData.exampleAnswer);

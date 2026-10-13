@@ -14,7 +14,7 @@ class saveAssignmentPage {
         this.continueDraftButton = page.getByRole('button', { name: 'Continue Draft' });
         this.updatebtn = page.getByText('Update', { exact: true });
         this.questionTxt = page.getByRole('textbox', {
-            name: 'Assignment questions*'
+            name: 'Assignment*'
         });
         this.titleTxt = page.getByRole('textbox', {
             name: 'Title*'
@@ -92,7 +92,7 @@ class saveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.continueDraftButton).click();
+        await assignmentCard.getByRole('button', { name: 'Continue Draft', exact: true }).click();
         await expect(this.questionTxt).toBeVisible({ timeout: 15000 });
         console.log("continueDraftAssignment ended");
     }
@@ -120,7 +120,7 @@ class saveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.editbtn).click();
+        await assignmentCard.getByRole('button', { name: 'Edit', exact: true }).click();
         await expect(this.questionTxt).toBeVisible({ timeout: 15000 });
         console.log("continueeditedAssignment ended");
     }
@@ -135,7 +135,7 @@ class saveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.copybtn).click();
+        await assignmentCard.getByRole('button', { name: 'Copy', exact: true }).click();
         await expect(this.questionTxt).toBeVisible({ timeout: 15000 });
         console.log("continuecopydAssignment ended");
     }
@@ -151,7 +151,7 @@ class saveAssignmentPage {
         await this.openManageAssignments();
         await this.selectAssignmentTitle();
         const assignmentCard = await this.getSavedAssignmentCard();
-        await assignmentCard.locator(this.publish).click();
+        await assignmentCard.getByRole('button', { name: 'Publish', exact: true }).click();
         const confirmDialog = this.page.getByRole('dialog').filter({ hasText: 'Confirm Publish' });
         await expect(confirmDialog).toBeVisible({ timeout: 15000 });
         console.log("continuepublishAssignment ended");

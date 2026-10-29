@@ -5,5 +5,10 @@
         "UsernameStudent1":"student1@ispschool.com",
         "UsernameTeacher2":"teacher2@ispschool.com",
         "UsernameStudent2":"student2@ispschool.com"
+    },
+
+    "TutorCredintial":{
+     "UsernameTeacher3":"teacher3@ispschool.com",
+     "Password":"TempPassword123!"
     }
 }

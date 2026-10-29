@@ -1,0 +1,7 @@
+{
+    "studentGroup":{
+     "name":"autoomation group",
+     "description":"created to use in automation tests",
+     "updatedDescription":"updated description for automation tests"
+    }
+}

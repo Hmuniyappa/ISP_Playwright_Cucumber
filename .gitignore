@@ -19,3 +19,12 @@ cucumber-report/
 test-results/videos/
 test-results/screenshots/
 test-results/traces/
+
+#debug
+debug/
+*.log
+*-debug.json
+
+# Local environment and browser state
+.env
+storageState.json

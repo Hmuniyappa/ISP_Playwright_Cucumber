@@ -20,5 +20,11 @@ Feature: login functionality
     When User enters usernameteacher2 and password
     And User clicks login button
     Then User should be redirected to dashboard
-  
+
+ @teacher3
+  Scenario: Successful login to ISP AI Tutor
+    Given User is on AI Tutor login page
+    When User enters usernameteacher3 and password
+    And User clicks Tutor login button
+    Then User should be redirected to AI tutor dashboard
   

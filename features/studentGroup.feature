@@ -5,17 +5,35 @@ Feature: Create student group functionality
         Given User is on AI Tutor login page
         When User enters usernameteacher3 and password
         And User clicks login button
-       
-@createdstudentgroup
-Scenario: Create a new student group
-    Given User clicks on the Create new Group button
-    When User enters the student group details
-    And User clicks the Save button
-    Then The new student group should be created successfully
+        Given User clicks on the Toggle Menu and Student Groups option
 
-@editstudentgroup
-Scenario: Edit an existing student group
-    Given User clicks on the edit group button
-    When User edit the student group details
-    And User clicks the update group button
-    Then The student group should be updated successfully
+    @createdstudentgroup
+    Scenario: Create a new student group
+        When User enters the student group details
+        And User clicks the Save button
+        Then The new student group should be created successfully
+
+    @editstudentgroup
+    Scenario: Edit an existing student group
+        When User edit the student group details
+        Then The student group should be updated successfully
+
+    @resetandcancelstudentgroup
+    Scenario: Reset and Cancel student group edit
+        When User clicks the Reset and Cancel buttons
+
+    @viewstudentgroup
+    Scenario: View an existing student group
+        When User views the student group details
+
+    @deletestudentgroup
+    Scenario: Delete an existing student group
+        When User deletes the student group
+
+    @creationgroupforTutor
+    Scenario: Create a group for AI Tutor session
+        When User enters the student group details
+        And User clicks the Save button
+        Then The new student group should be created successfully
+        When User views the student group details
+        Then User selects the custom group for AI Tutor session

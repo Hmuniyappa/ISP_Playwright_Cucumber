@@ -1,0 +1,14 @@
+{
+    "aiTutorcreation": {
+        "title": "AI Tutor Automation Session Title",
+        "subject": "History",
+        "topic": "World War II",
+        "learning Language": "English (en-US)",
+        "curriculum": "UK National Curriculum (KS1/KS2)",
+        "student age": "6-7",
+        "select source": "Custom Group",
+        "custom group": "automation group",
+        "expirydate": "11/11/2026",
+        "learning Outcome": "Understand the key events and impact of World War II"
+    }
+}

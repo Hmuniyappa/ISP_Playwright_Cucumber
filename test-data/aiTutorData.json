@@ -1,7 +1,8 @@
 {
     "studentGroup":{
-     "name":"autoomation group",
+     "name":"automation group",
      "description":"created to use in automation tests",
-     "updatedDescription":"updated description for automation tests"
+     "updatedDescription":"updated description for automation tests",
+     "students": ["Student 1", "Student 2"]
     }
 }

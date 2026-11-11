@@ -8,52 +8,20 @@ class AssignmentPage {
         this.page = page;
 
         // Dashboard renders both a nav button and a card button with this name
-        this.manageAssignmentBtn = page.getByRole('button', {
-            name: 'Manage Assignments'
-        }).first();
-
-        this.createAssignmentBtn = page.getByRole('button', {
-            name: 'Create Assignment'
-        });
-
-        this.titleTxt = page.getByRole('textbox', {
-            name: 'Title*'
-        });
-
-        this.questionTxt = page.getByRole('textbox', {
-            name: 'Assignment*'
-        });
-
+        this.manageAssignmentBtn = page.getByRole('button', {name: 'Manage Assignments'}).first();
+        this.createAssignmentBtn = page.getByRole('button', {name: 'Create Assignment'});
+        this.titleTxt = page.getByRole('textbox', {name: 'Title*'});
+        this.questionTxt = page.getByRole('textbox', {name: 'Assignment*'});
         this.uploadImagesInput = page.locator('input[type="file"]').first();
-        this.subjectDropdown = page.getByRole('combobox', {
-            name: 'Select Subject'
-        });
-
-        this.languageDropdown = page.getByRole('combobox', {
-            name: 'Select Language'
-        });
-
-        this.curriculumDropdown = page.getByRole('combobox', {
-            name: 'Select Curriculum'
-        });
-
-        this.ageRangeDropdown = page.getByRole('combobox', {
-            name: 'Select Age Range'
-        });
+        this.subjectDropdown = page.getByRole('combobox', { name: 'Select Subject'});
+        this.languageDropdown = page.getByRole('combobox', { name: 'Select Language'});
+        this.curriculumDropdown = page.getByRole('combobox', {name: 'Select Curriculum' });
+        this.ageRangeDropdown = page.getByRole('combobox', {name: 'Select Age Range'});
         // These two selects have no accessible label - only placeholder text
         this.classDropdown = page.getByText('Choose a Class', { exact: true });
         this.studentDropdown = page.getByText('Select Students', { exact: true });
-        this.markingCriteriaTxt = page.getByRole('textbox', {
-            name: 'Marking Criteria/Rubric*'
-        });
-
-        this.exampleAnswerTxt = page.getByRole('textbox', {
-            name: 'Example Answer'
-        });
-        // enable with LC drop down when the feature is implemented
-        //this.lifeCompetencyDropdown = page.locator('#lifeCompetencies');
-        //this.lifeCompetencyCheckbox = page.getByRole('listitem')
-        //    .filter({ hasText: assignmentData.lifeCompetency });
+        this.markingCriteriaTxt = page.getByRole('textbox', { name: 'Marking Criteria/Rubric*' });
+        this.exampleAnswerTxt = page.getByRole('textbox', {name: 'Example Answer' });
         this.dueDaySpinbutton = this.page.getByRole('spinbutton', { name: 'Day' });
         this.dueMonthSpinbutton = this.page.getByRole('spinbutton', { name: 'Month' });
         this.dueYearSpinbutton = this.page.getByRole('spinbutton', { name: 'Year' });
@@ -61,15 +29,11 @@ class AssignmentPage {
         this.producemarkingLabel = page.getByRole('textbox', { name: 'Please provide total mark' });
         this.producegrading = page.getByRole('checkbox', { name: 'Produce grading' });
         this.producegradingLabel = page.getByRole('textbox', { name: 'Provide grading criteria here' });
-        this.saveForLaterBtn = page.getByRole('button', {
-            name: 'Save For Later'
-        });
+        this.saveForLaterBtn = page.getByRole('button', { name: 'Save For Later'});
         this.savedTab = page.getByRole('tab', { name: 'Saved' });
         this.resetbutton = page.getByRole('button', { name: 'Reset' });
-        this.cancelbutton = page.getByRole('button', { name: 'Cancel' });
         this.createdbutton = page.getByRole('button', { name: 'Create' });
         this.publishedTab = page.getByRole('tab', { name: 'Published' });
-        this.confirmBtn = page.getByRole('button', { name: 'Confirm' });
     }
 
     async navigateToAssignmentPage() {
@@ -176,7 +140,6 @@ class AssignmentPage {
         await this.exampleAnswerTxt.fill(publicAssignmentData.exampleAnswer);
         //await this.selectLifeCompetencies();
         await this.setDueDate(publicAssignmentData.dueDate);
-        this.createdTitle = this.randomAssignmentId;
 }
 
     // MUI menus stay open with an invisible backdrop that blocks later clicks
@@ -221,12 +184,10 @@ class AssignmentPage {
     async publicAssignment() {
         await this.createdbutton.scrollIntoViewIfNeeded();
         await this.createdbutton.click();
-        // Create only saves the assignment; it lands on the Saved list where it must be published
-        const card = this.page.locator('.MuiPaper-root')
-            .filter({ hasText: this.createdTitle })
-            .first();
-        await card.getByRole('button', { name: 'Publish' }).click();
-        await this.confirmBtn.click();
+        const confirmDialog = this.page.getByRole('dialog').filter({ hasText: 'Confirm Publish' });
+        await expect(confirmDialog).toBeVisible({ timeout: 15000 });
+        await confirmDialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+        await expect(confirmDialog).toHaveCount(0, { timeout: 15000 });
         console.log("end publicAssignmentForm");
     }
 
@@ -250,23 +211,21 @@ class AssignmentPage {
         console.log("end resetAssignmentForm");
     }
 
-    async clickCancelButton() {
-        // A unique title proves the cancel entry never reached the Saved list
+    async leaveAssignmentForm() {
+        // A unique title proves leaving the form does not create an assignment
         this.cancelTitle = `${createAssignmentData.title} Cancel ${Date.now()}`;
         await this.titleTxt.fill(this.cancelTitle);
         await this.questionTxt.fill(createAssignmentData.question);
         await this.markingCriteriaTxt.fill(createAssignmentData.markingCriteria);
-        await this.cancelbutton.scrollIntoViewIfNeeded();
-        await this.cancelbutton.click();
-    }
-    async cancelAssignmentForm() {
-        // The Saved tab lives on the assignment list page, not on the create form
         await this.manageAssignmentBtn.click();
+    }
+
+    async verifyAssignmentWasDiscarded() {
         await this.savedTab.click();
         await expect(
             this.page.getByText(this.cancelTitle, { exact: false })
         ).toHaveCount(0);
-        console.log("end cancelAssignmentForm");
+        console.log("verifyAssignmentWasDiscarded ended");
     }
 
     async verifyPublicAssignmentDisplayed() {

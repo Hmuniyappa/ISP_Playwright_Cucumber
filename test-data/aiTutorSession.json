@@ -1,0 +1,26 @@
+{
+    "aiTutorcreationfile": {
+        "title": "AI Tutor Automation Session Title file upload",
+        "subject": "History",
+        "topic": "World War II",
+        "learning Language": "English (en-US)",
+        "curriculum": "UK National Curriculum (KS1/KS2)",
+        "student age": "6-7",
+        "select source": "Custom Group",
+        "custom group": "automation group",
+        "expirydate": "11/12/2026",
+        "learning Outcome": "Understand the key events and impact of World War II"
+    },
+    "aitutorcreation": {
+        "title": "Religious Studies - Special Celebrations",
+        "subject": "Religious Study",
+        "topic": "Religious Celebrations",
+        "learning language": "English (en-US)",
+        "curriculum": "UK National Curriculum (KS1/KS2)",
+        "student age": "6-7",
+        "select source": "Custom Group",
+        "custom group": "automation group",
+        "expirydate": "21/12/2026",
+        "learning Outcome": "Identify important religious celebrations such as Christmas, Diwali and Eid, and describe how people celebrate them."
+    }
+}

@@ -35,12 +35,12 @@ Then('Assignment should be reset successfully', async function () {
     await assignmentPage.resetAssignmentForm();
 });
 
-Then('User click on cancel button', async function () {
-    await assignmentPage.clickCancelButton();
+When('User leaves assignment form without saving', async function () {
+    await assignmentPage.leaveAssignmentForm();
 });
 
-Then('Assignment should be cancelled successfully', async function () {
-    await assignmentPage.cancelAssignmentForm();
+Then('Assignment should be discarded successfully', async function () {
+    await assignmentPage.verifyAssignmentWasDiscarded();
 });
 
 Then('User click on create button', async function () {

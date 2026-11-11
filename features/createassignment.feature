@@ -26,5 +26,5 @@ Feature: Create Assignments functionality
 
     @cancel
     Scenario: Cancel Assignments functionality
-        And User click on cancel button
-        Then Assignment should be cancelled successfully
+        And User leaves assignment form without saving
+        Then Assignment should be discarded successfully

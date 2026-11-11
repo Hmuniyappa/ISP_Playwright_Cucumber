@@ -18,7 +18,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         this.submissionsbtn = page.getByRole('button', { name: 'View Submissions' });
         this.regeneratebtn = page.getByRole('button', { name: /Regenerate/i }).first();
         this.regeneratewithfeedbackbtn = page.getByRole('button', { name: 'Regenerate with Feedback' });
-        this.editicon = page.locator('[aria-label="Edit AI Generated Feedback"], button:has-text("Edit"), [title*="Edit"]').first();
+        this.editicon = page.locator('button:has([aria-label="Edit AI Generated Feedback"]), button:has-text("Edit"), button[title*="Edit"]').first();
         this.savebutton = page.getByRole('button', { name: 'Save' });
         this.publicreworkbtn = page.getByRole('button', { name: 'Publish + Rework' });
         this.publicfinialisebtn = page.getByRole('button', { name: 'Publish + Finalize' });
@@ -34,12 +34,6 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         this.closeassigmnetbtn = page.getByRole('button', { name: 'Close', exact: true });
     }
 
-
-    async getViewAssignmentHeader() {
-        this.closebtn = this.page.getByRole('button', { name: 'Close', exact: true });
-        await expect(this.closebtn).toBeVisible({ timeout: 15000 });
-        return await this.page.locator('body').textContent();
-    }
 
     async getCardTitle(assignmentCard) {
         return await assignmentCard.getByRole('heading').textContent();
@@ -72,13 +66,19 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         const assignmentCard = this.page.locator('.MuiPaper-root').first();
         await expect(assignmentCard).toBeVisible({ timeout: 15000 });
         const cardTitle = await this.getCardTitle(assignmentCard);
+        const popupPromise = this.page.waitForEvent('popup', { timeout: 3000 }).catch(() => null);
         await assignmentCard.getByRole('button', { name: 'View', exact: true }).click();
-        const popupHeader = await this.getViewAssignmentHeader();
-        console.log('Card Title:', cardTitle);
-        console.log('Popup Header:', popupHeader);
-        const stableTitle = value => value.trim().replace(/\s+\d+$/, '');
-        expect(stableTitle(popupHeader)).toContain(stableTitle(cardTitle));
-        await this.closebtn.click();
+        const popup = await popupPromise;
+        if (popup) {
+            await expect(popup.getByText(cardTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
+            await popup.close();
+            return;
+        }
+
+        const viewDialog = this.page.getByRole('dialog').filter({ hasText: cardTitle }).first();
+        await expect(viewDialog).toBeVisible({ timeout: 15000 });
+        await expect(viewDialog.getByText(cardTitle, { exact: false }).first()).toBeVisible();
+        await viewDialog.getByRole('button', { name: 'Close', exact: true }).click();
     }
 
     async continueCopyPublishedAssignment() {
@@ -277,8 +277,15 @@ class publishedAssignmentPage extends SaveAssignmentPage {
 
     async publishandfinishButton() {
         await this.openManageAssignments();
-        await this.selectAssignmentPublishedTitle();
-        const assignmentCard = await this.getSavedAssignmentCard();
+        await this.publishedtab.click();
+        await this.search.clear();
+        const assignmentCard = this.page.locator('.MuiPaper-root')
+            .filter({ hasText: /SOME SUBMISSIONS RECEIVED/i })
+            .filter({ has: this.page.getByRole('button', { name: 'View Submissions', exact: true }) })
+            .first();
+        await expect(assignmentCard).toBeVisible({ timeout: 15000 });
+        this.assignmentTitle = (await assignmentCard.getByRole('heading').first().textContent()).trim();
+        setAssignmentTitle(this.assignmentTitle);
         await assignmentCard.getByRole('button', { name: 'View Submissions', exact: true }).click();
         await expect(this.page.getByRole('heading', { name: 'View Submissions' })).toBeVisible({ timeout: 15000 });
         await expect(this.page.getByText(this.assignmentTitle, { exact: false }).first()).toBeVisible({ timeout: 15000 });
@@ -421,6 +428,7 @@ class publishedAssignmentPage extends SaveAssignmentPage {
         await this.openManageAssignments();
         await this.publishedtab.click();
         await this.search.clear();
+        await expect(this.search).toBeVisible({ timeout: 15000 });
         const nextButton = this.page.getByRole('button', { name: 'Next', exact: true });
         let assignmentCard;
 

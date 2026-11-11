@@ -1,6 +1,6 @@
 const path = require('path');
 const { expect } = require('@playwright/test');
-const aiTutorsessionData = require('../test-data/aiTutorSession.json').aiTutorcreation;
+const aiTutorsessionData = require('../test-data/aiTutorSession.json').aitutorcreation;
 
 class AITutorSessionPage {
     constructor(page) {
@@ -30,7 +30,7 @@ class AITutorSessionPage {
         await this.title.fill(aiTutorsessionData.title);
         await this.selectOption(this.subject, aiTutorsessionData.subject);
         await this.topic.fill(aiTutorsessionData.topic);
-        await this.selectOption(this.learningLanguage, aiTutorsessionData['learning Language']);
+        await this.selectOption(this.learningLanguage, aiTutorsessionData['learning language']);
         await this.selectOption(this.curriculum, aiTutorsessionData.curriculum);
         await this.selectOption(this.studentAge, aiTutorsessionData['student age']);
         await this.selectSource.check();
@@ -38,10 +38,10 @@ class AITutorSessionPage {
         await this.setDueDate(aiTutorsessionData.expirydate);
         await this.learningOutcome.fill(aiTutorsessionData['learning Outcome']);
         await this.publishButton.click();
-        await expect(this.page.getByText('Session Published Successfully!', { exact: true }))
-            .toBeVisible({ timeout: 30000 });
+        await expect(this.page.getByText('Session Published Successfully!', { exact: true })).toBeVisible({ timeout: 30000 });
         await this.page.getByRole('button', { name: 'Close', exact: true }).click();
     }
+
     async createAITutorSessionfile() {
         await this.title.fill(aiTutorsessionData.title);
         await this.selectOption(this.subject, aiTutorsessionData.subject);
@@ -57,14 +57,13 @@ class AITutorSessionPage {
         const imagePath2 = path.resolve(__dirname, '..', 'Imageupload', 'World War II.jpg');
         await this.fileInput.setInputFiles([imagePath1, imagePath2]);
         await this.publishButton.click();
-        await expect(this.page.getByText('Session Published Successfully!', { exact: true }))
-            .toBeVisible({ timeout: 30000 });
+        await expect(this.page.getByText('Session Published Successfully!', { exact: true })).toBeVisible({ timeout: 30000 });
         await this.page.getByRole('button', { name: 'Close', exact: true }).click();
-
     }
+
     async selectOption(locator, label) {
         await locator.click();
-        const option = this.page.getByRole('option', { name: label, exact: true });
+        const option = this.page.getByRole('listbox').getByRole('option', { name: label, exact: true }).first();
         await expect(option).toBeVisible();
         await option.click();
     }
@@ -80,6 +79,24 @@ class AITutorSessionPage {
         await expect(dateButton).toBeVisible();
         await dateButton.click();
         await expect(this.expiry).toHaveText(date);
+    }
+    
+        async resetAITutorSession() {
+        await this.title.fill(aiTutorsessionData.title);
+        await this.selectOption(this.subject, aiTutorsessionData.subject);
+        await this.resetButton.click();
+        await expect(this.title).toHaveValue('');
+    }
+
+    async cancelAITutorSession() {
+        const formPath = '/teacher/create-buddy-session';
+        await this.title.fill(aiTutorsessionData.title);
+        await this.selectOption(this.subject, aiTutorsessionData.subject);
+        await this.cancelButton.click();
+        await this.page.waitForURL(
+            url => !url.pathname.includes(formPath),
+            { timeout: 20000 }
+        );
     }
 }
 module.exports = { AITutorSessionPage };

@@ -1,5 +1,5 @@
-@createstudentgroupfunctionality
-Feature: Create student group functionality
+@createaitutorsessionfunctionality
+Feature: Create AI Tutor session functionality
 
     Background:
         Given User is on AI Tutor login page
@@ -14,3 +14,13 @@ Feature: Create student group functionality
     @createaitutorsessionfile
     Scenario: Create AI Tutor session with file upload
         Then AI Tutor session should be created successfully with file upload
+
+    @resetaitutorsession
+    Scenario: Reset AI Tutor session
+        Then AI Tutor session should be reset tutor successfully
+
+    @cancelaitutorsession
+    Scenario: Cancel AI Tutor session
+        Then AI Tutor session should be cancelled tutor successfully
+
+
